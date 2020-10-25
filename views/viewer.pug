@@ -1,0 +1,76 @@
+doctype html
+html(lang="en")
+  head
+    title Socket.IO chat on App Engine
+    meta(charset="utf-8")
+    style.
+        body {
+            background: black;
+        }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; background: #ddd; }
+        #messages li:nth-child(odd) { background: #eee; }
+        .heart {
+            position; absolute;
+            bottom: 0;
+        }
+  body
+    .canvas
+        canvas#canvas
+    ul(id="messages")
+    script(src="/socket.io/socket.io.js")
+    script(src="https://code.jquery.com/jquery-1.11.1.js")
+    script.
+        const canvas = document.querySelector("#canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext("2d");
+
+        const hearts = [];
+        class Heart {
+            constructor(msg) {
+                this.x = Math.random() * canvas.width - 20;
+                this.y = canvas.height - 20;
+                this.text = msg;
+                this.opacity = 1
+                this.vy = Math.random() * 3 + 0.01
+            }
+        }
+
+      $(function () {
+        var socket = io();
+        socket.on('good emitted', function(msg){
+           hearts.push(new Heart(msg));
+        });
+        socket.on('chat message', function(msg){
+           console.log(msg);
+           $('#messages').append($('<li>').text(msg));
+           window.scrollTo(0, document.body.scrollHeight);
+         });
+      });
+
+      const tick = () => {
+        requestAnimationFrame(tick);
+        ctx.fillStyle = "rgba(0,0,0,0.2)"
+        ctx.fillRect(0,0,canvas.width, canvas.height)
+        hearts.forEach((h, index) => {
+            if(h.y < 0) {
+                hearts.splice(index, 1)
+            } else {
+                ctx.save()
+                h.y -= h.vy;
+                h.opacity -= 0.01
+                if(h.opacity < 0) {
+                    h.opacity = 0
+                }
+                ctx.globalAlpha = h.opacity;
+                ctx.font = "60px serif"
+                ctx.fillStyle = "red"
+                ctx.fillText(h.text, h.x, h.y)
+                ctx.restore()
+            }
+        })
+      }
+
+      tick();
+      
