@@ -35,6 +35,9 @@ io.on('connection', (socket) => {
   socket.on('good emitted', (msg) => {
     io.emit('good emitted', msg);
   });
+  socket.on('shake', (msg) => {
+    io.emit('shake', msg);
+  });
 });
 
 if (module === require.main) {

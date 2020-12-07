@@ -26,6 +26,8 @@ html(lang="en")
         canvas.height = window.innerHeight;
         const ctx = canvas.getContext("2d");
 
+        const audioContext = new AudioContext();
+
         const hearts = [];
         class Heart {
             constructor(msg) {
@@ -40,6 +42,7 @@ html(lang="en")
       $(function () {
         var socket = io();
         socket.on('good emitted', function(msg){
+            console.log(msg)
            hearts.push(new Heart(msg));
         });
         socket.on('chat message', function(msg){
@@ -47,7 +50,31 @@ html(lang="en")
            $('#messages').append($('<li>').text(msg));
            window.scrollTo(0, document.body.scrollHeight);
          });
+        socket.on('shake', function(msg){
+           console.log(msg);
+            sound(msg)
+         });
       });
+
+      var osciillatorNode = audioContext.createOscillator();
+
+      const sound = (msg) => {
+           // オシレーターを作成
+            // MIDIノートナンバーを周波数に変換
+            var freq = 440.0 * Math.pow(2.0, (msg) / 12.0);
+
+            // オシレーターの周波数を決定
+            osciillatorNode.frequency.value = freq;
+            // オシレーターを最終出力に接続
+            // オシレーター動作
+      }
+
+      document.querySelector(".canvas").onclick = () => {
+          sound(50);
+
+          osciillatorNode.connect(audioContext.destination);
+          osciillatorNode.start();
+      }
 
       const tick = () => {
         requestAnimationFrame(tick);

@@ -1,3 +1,6 @@
+#ライブハウスで使う
+https://dashboard.heroku.com/apps/neuronasocket/deploy/heroku-git
+
 # Node.js websockets sample for Google App Engine
 
 This sample demonstrates how to use websockets on
@@ -52,3 +55,4 @@ See [Contributing][contributing].
 [readme]: ../README.md
 [contributing]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/blob/master/CONTRIBUTING.md
 
+ngrok http 8080
