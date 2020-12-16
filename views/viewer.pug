@@ -25,8 +25,9 @@ html(lang="en")
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         const ctx = canvas.getContext("2d");
-
-        const audioContext = new AudioContext();
+        
+        const defaultFontSize = 62;
+        let voices = [] // 投稿テキストが入る
 
         const hearts = [];
         class Heart {
@@ -42,56 +43,76 @@ html(lang="en")
       $(function () {
         var socket = io();
         socket.on('good emitted', function(msg){
-            console.log(msg)
-           hearts.push(new Heart(msg));
+            console.log(msg.id)
+           hearts.push(new Heart(msg.text));
         });
         socket.on('chat message', function(msg){
            console.log(msg);
-           $('#messages').append($('<li>').text(msg));
-           window.scrollTo(0, document.body.scrollHeight);
-         });
-        socket.on('shake', function(msg){
-           console.log(msg);
-            sound(msg)
+           createImage(msg.message)
+        //-    if(!msg.centerd) {
+        //-        createImage(msg.message)
+        //-    }
+           //$('#messages').append($('<li>').text(msg.message));
+          // window.scrollTo(0, document.body.scrollHeight);
          });
       });
 
-      var osciillatorNode = audioContext.createOscillator();
+        const createImage = (msg) => {
+            const _canvas = document.createElement("canvas");
+            const _ctx = _canvas.getContext("2d");
+            const textLength = msg.length;
+            const rectangleSize = {
+                w: defaultFontSize * 3,
+                h: textLength * defaultFontSize + (defaultFontSize * 2)
+            }
+            _canvas.width = rectangleSize.w;
+            _canvas.height = rectangleSize.h;
+            _ctx.font = defaultFontSize + "px 'ヒラギノ明朝' , serif"
+            Array.prototype.forEach.call(msg, function(s,i) {
+                for(let j=0; j<2; j++) {
+                    const randomColor = `hsl(${Math.random()*360},100%,90%)`;
+                    _ctx.save()
+                    //_ctx.globalCompositeOperation = "lighter"
+                    _ctx.strokeStyle = randomColor;
+                    const _r = Math.random() * .2 - .1;
+                    _ctx.setTransform(Math.cos(_r), Math.sin(_r), -Math.sin(_r), Math.cos(_r), defaultFontSize + _r * 12, defaultFontSize * i + defaultFontSize + _r * 12);
+                    _ctx.strokeText(s, 0,0);
+                    _ctx.restore();
+                }
+            });
+            
+            voices.push({
+                canvas: _canvas,
+                height: rectangleSize.h,
+                x: Math.random() * canvas.width,
+                y: canvas.height
+            })
+        }
 
-      const sound = (msg) => {
-           // オシレーターを作成
-            // MIDIノートナンバーを周波数に変換
-            var freq = 440.0 * Math.pow(2.0, (msg) / 12.0);
-
-            // オシレーターの周波数を決定
-            osciillatorNode.frequency.value = freq;
-            // オシレーターを最終出力に接続
-            // オシレーター動作
-      }
-
-      document.querySelector(".canvas").onclick = () => {
-          sound(50);
-
-          osciillatorNode.connect(audioContext.destination);
-          osciillatorNode.start();
-      }
 
       const tick = () => {
         requestAnimationFrame(tick);
-        ctx.fillStyle = "rgba(0,0,0,0.2)"
+        ctx.fillStyle = "rgba(0,0,0,0.1)";
         ctx.fillRect(0,0,canvas.width, canvas.height)
+        for(let i=0, l=voices.length; i<l; i++) {
+            const p = voices[i];
+            p.y -=2;
+            ctx.drawImage(p.canvas, p.x, p.y);
+        }
+
+        voices = voices.filter(n => n.y > -n.height);
+
+        console.log(voices.length)
+        
+
         hearts.forEach((h, index) => {
             if(h.y < 0) {
                 hearts.splice(index, 1)
             } else {
                 ctx.save()
-                h.y -= h.vy;
-                h.opacity -= 0.01
-                if(h.opacity < 0) {
-                    h.opacity = 0
-                }
-                ctx.globalAlpha = h.opacity;
-                ctx.font = "60px serif"
+                h.y -= 2;
+                
+                ctx.font = "120px serif"
                 ctx.fillStyle = "red"
                 ctx.fillText(h.text, h.x, h.y)
                 ctx.restore()
