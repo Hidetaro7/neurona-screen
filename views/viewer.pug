@@ -4,20 +4,13 @@ html(lang="en")
     title Socket.IO chat on App Engine
     meta(charset="utf-8")
     style.
-        body {
-            background: black;
-        }
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages li { padding: 5px 10px; background: #ddd; }
-        #messages li:nth-child(odd) { background: #eee; }
-        .heart {
-            position; absolute;
-            bottom: 0;
-        }
+    link(rel="stylesheet", href="css/view.css")
   body
     .canvas
         canvas#canvas
-    ul(id="messages")
+    .photo
+    .messages
+        .message(onAnimationEnd="messageEnd(this)") こんにちは、ぬーろな😀
     script(src="/socket.io/socket.io.js")
     script(src="https://code.jquery.com/jquery-1.11.1.js")
     script.
@@ -25,6 +18,8 @@ html(lang="en")
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         const ctx = canvas.getContext("2d");
+
+        const memberPhoto = document.querySelector("#member-photo")
         
         const defaultFontSize = 62;
         let voices = [] // 投稿テキストが入る
@@ -40,15 +35,27 @@ html(lang="en")
             }
         }
 
+        const messageEnd = (messageElem) => { // メッセージが上まで行ったら消す
+            $(messageElem).remove()
+        }
+
       $(function () {
         var socket = io();
         socket.on('good emitted', function(msg){
-            console.log(msg.id)
+           console.log(msg)
            hearts.push(new Heart(msg.text));
         });
         socket.on('chat message', function(msg){
            console.log(msg);
-           createImage(msg.message)
+           if (msg.id !==0) {
+               // ユーザーからの投稿
+               const posX = Math.floor(Math.random() * (canvas.width)-40)
+               const textMessage = "<div class='message' style='color: "+msg.color+"; left: "+posX+"px;' onAnimationEnd='messageEnd(this)'>" + msg.message + "</div>";
+               $(".messages").append(textMessage)
+           } else {
+               createImage(msg.message)
+           }
+           
         //-    if(!msg.centerd) {
         //-        createImage(msg.message)
         //-    }
@@ -67,10 +74,10 @@ html(lang="en")
             }
             _canvas.width = rectangleSize.w;
             _canvas.height = rectangleSize.h;
-            _ctx.font = defaultFontSize + "px 'ヒラギノ明朝' , serif"
+            _ctx.font = defaultFontSize + "px serif"
             Array.prototype.forEach.call(msg, function(s,i) {
                 for(let j=0; j<2; j++) {
-                    const randomColor = `hsl(${Math.random()*360},100%,90%)`;
+                    const randomColor = `hsla(${Math.random()*360},100%,90%, .2)`;
                     _ctx.save()
                     //_ctx.globalCompositeOperation = "lighter"
                     _ctx.strokeStyle = randomColor;
@@ -92,18 +99,14 @@ html(lang="en")
 
       const tick = () => {
         requestAnimationFrame(tick);
-        ctx.fillStyle = "rgba(0,0,0,0.1)";
+        ctx.fillStyle = "rgba(0,0,0,0.05)";
         ctx.fillRect(0,0,canvas.width, canvas.height)
         for(let i=0, l=voices.length; i<l; i++) {
             const p = voices[i];
             p.y -=2;
             ctx.drawImage(p.canvas, p.x, p.y);
         }
-
         voices = voices.filter(n => n.y > -n.height);
-
-        console.log(voices.length)
-        
 
         hearts.forEach((h, index) => {
             if(h.y < 0) {
@@ -111,7 +114,6 @@ html(lang="en")
             } else {
                 ctx.save()
                 h.y -= 2;
-                
                 ctx.font = "120px serif"
                 ctx.fillStyle = "red"
                 ctx.fillText(h.text, h.x, h.y)

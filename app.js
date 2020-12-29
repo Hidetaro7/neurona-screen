@@ -15,8 +15,11 @@
 'use strict';
 
 // [START appengine_websockets_app]
-const app = require('express')();
+const express = require('express');
+const app = express();
+const path    = require("path");
 app.set('view engine', 'pug');
+app.use(express.static(path.join(__dirname, 'public')));
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
@@ -36,7 +39,7 @@ app.get('/viewer', (req, res) => {
 
 io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
-    const sendMessage = {centerd: false, message: msg.message}
+    const sendMessage = {id: msg.id, centerd: false, message: msg.message, color: msg.color}
     //console.log(new Date().getTime() , featuredMessage.lastUpdate ,new Date().getTime() - featuredMessage.lastUpdate )
     if(!featuredMessage.id || new Date().getTime() - featuredMessage.lastUpdate > limitTime) {
       featuredMessage.id = msg.id;

@@ -1,64 +1,83 @@
 
 doctype html
-html(lang="en")
+html(lang="ja")
   head
     title Socket.IO chat on App Engine
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0")
-    style.
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 16px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; font-size: 100% }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      .good button {
-          font-size: 2rem;
-          padding: 2rem;
-      }
-  //- [START appengine_websockets_form]
+    link(rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-9ZfPnbegQSumzaE7mks2IYgHoayLtuto3AS6ieArECeaR8nCfliJVuLh/GaQ1gyM" crossorigin="anonymous")
+    link(rel="stylesheet", href="css/index.css")
+
   body
-    .wrap
-      .good
-        button
-          | 😆
-        button
-          | 🙆
-        button
-          | 💖
-        button
-          | 👍
-        button
-          | 🐱
-        button
-          | ❗
-    form(action="")
-      input(id="m" autocomplete="off")
-      button Send
-    //- [END appengine_websockets_form]
+    
+
+    iframe.viewer(src="/viewer", frameborder="0")
+
+    .container
+      
+      .color-selector
+        button.color-button.selected(data-color="rgb(255, 255, 255)")
+        button.color-button(data-color="rgb(219, 52, 74)")
+        button.color-button(data-color="rgb(238, 192, 40)")
+        button.color-button(data-color="rgb(69, 212, 176)")
+        button.color-button(data-color="rgb(140, 219, 224)")
+        button.color-button(data-color="rgb(136, 147, 247)")
+        button.color-button(data-color="rgb(212, 147, 238)")
+        
+      form(action="")
+        //- input(type="color", name="color" value="#ffffff" id="color")
+        .send-message
+          input.skelton(id="m" autocomplete="off" placeholder="メッセージ...")
+          button.button-post
+            i.fad.fa-paper-plane
+      //-
+        .good
+          button
+            | 😆
+          button
+            | 🙆
+          button
+            | 💖
+          button
+            | 👍
+          button
+            | 🐱
+          button
+            | ❗
 
     script(src="/socket.io/socket.io.js")
-    script(src="https://code.jquery.com/jquery-1.11.1.js")
+    script(src="https://code.jquery.com/jquery-2.2.4.js")
     script.
       // [START appengine_websockets_js]
+      let currentColor = "#fff"
+      $(".color-button").each(function () {
+        const bgcolor = $(this).data("color")
+        $(this).append("<div class='dot' style='background-color: "+bgcolor+"'></dot>")
+        $(this).css({"border-color": bgcolor})
+      })
+      $(".color-selector button").click(function () {
+        $(".color-button").each((i, val) => {
+          $(val).removeClass("selected")
+        })
+        $(this).addClass("selected")
+        currentColor = $(this).data("color")
+        $("#m").css({borderColor: currentColor, color: currentColor})
+      })
       $(function () {
         var socket = io();
         $('form').submit(function(){
-          socket.emit('chat message', {id:socket.id, message: $('#m').val()} );
+          //テキスト
+          socket.emit('chat message', {id:socket.id, message: $('#m').val(), color: currentColor} );
           $('#m').val('');
           $('#m')[0].focus()
           return false;
         });
         $(".good button").on("click", function () {
+          //絵文字
           socket.emit('good emitted', {id: socket.id, text: this.innerText});
           return false;
         })
-
       });
-
-
-
-      
-
 
       // [END appengine_websockets_js]
 //- [END appengine_websockets_index]
