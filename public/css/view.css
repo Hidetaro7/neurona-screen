@@ -13,7 +13,7 @@ body {
   z-index: 1;
 }
 
-.messages, .photo {
+.messages, .photo, .movie {
   position: fixed;
   z-index: 3;
   width: 100vw;
@@ -27,6 +27,18 @@ body {
   z-index: 2;
   background: black url(../img/neurona4_dark.png) center no-repeat;
   background-size: contain;
+}
+
+.movie {
+  z-index: 2;
+}
+
+.movie iframe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .messages .message {
