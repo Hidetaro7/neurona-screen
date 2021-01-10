@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/view.css">
+</head>
+<body>
+    <div class="messages"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      const messageEnd = (messageElem) => { // メッセージが上まで行ったら消す
+          $(messageElem).remove()
+      }
+      $(function () {
+        var socket = io();
+        socket.on('newComment', function(msg){
+            console.log(msg)
+            msg.forEach(element => {
+              //$('.messages').append($('<li>').text(element.message));
+              const posX = Math.floor(Math.random() * (window.innerWidth)-40)
+              const randColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+              const textMessage = "<div class='message' style='color: "+randColor+"; left: "+posX+"px;' onAnimationEnd='messageEnd(this)'>" + element.message + "<div class='user-info'><img class='user-icon' src='"+element.from_user.image+"' alt='"+element.from_user.name+"'><div class='user-name'>"+element.from_user.name+"</div></div></div>";
+              $(".messages").append(textMessage)
+            });
+          //window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    </script>
+</body>
+</html>

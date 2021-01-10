@@ -1,0 +1,112 @@
+body {
+  background-color: #000;
+  margin: 0;
+}
+
+.heart {
+  position: absolute;
+  bottom: 0;
+}
+
+.canvas {
+  position: relative;
+  z-index: 1;
+}
+
+.messages, .photo, .movie {
+  position: fixed;
+  z-index: 3;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  mix-blend-mode: lighten;
+}
+
+.photo {
+  z-index: 2;
+  background: black url(../img/neurona4_dark.png) center no-repeat;
+  background-size: contain;
+}
+
+.movie {
+  z-index: 2;
+}
+
+.movie iframe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.messages .message {
+  position: absolute;
+  top: 100vh;
+  -webkit-writing-mode: vertical-rl;
+      -ms-writing-mode: tb-rl;
+          writing-mode: vertical-rl;
+  text-orientation: upright;
+  color: #fff;
+  -webkit-animation: text-up 10s linear;
+          animation: text-up 10s linear;
+  white-space: nowrap;
+  font-size: 4vw;
+  font-weight: bold;
+  font-family: serif;
+}
+
+.messages .user-info {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.messages .user-info .user-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 10px;
+}
+
+.messages .user-info .user-name {
+  color: white;
+  font-size: 16px;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+@-webkit-keyframes text-up {
+  0% {
+    top: 100vh;
+    -webkit-transform: translateY(100%);
+            transform: translateY(100%);
+  }
+  100% {
+    top: 0;
+    -webkit-transform: translateY(-100%);
+            transform: translateY(-100%);
+  }
+}
+
+@keyframes text-up {
+  0% {
+    top: 100vh;
+    -webkit-transform: translateY(100%);
+            transform: translateY(100%);
+  }
+  100% {
+    top: 0;
+    -webkit-transform: translateY(-100%);
+            transform: translateY(-100%);
+  }
+}
+/*# sourceMappingURL=view.css.map */

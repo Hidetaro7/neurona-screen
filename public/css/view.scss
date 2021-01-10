@@ -1,0 +1,79 @@
+body {
+    background-color: #000;
+    margin: 0;
+}
+.heart {
+    position: absolute;
+    bottom: 0;
+}
+.canvas {
+    position: relative;
+    z-index: 1;
+}
+.messages, .photo, .movie {
+    position: fixed;
+    z-index: 3;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    mix-blend-mode: lighten;
+}
+.photo {
+    z-index: 2;
+    background: black url(../img/neurona4_dark.png) center no-repeat;
+    background-size: contain;
+}
+.movie {
+    z-index: 2;
+    iframe {
+        position: absolute;
+  top: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+    }
+}
+.messages {
+    .message {
+        position: absolute;
+        top: 100vh;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        color: #fff;
+        animation: text-up 10s linear;
+        white-space: nowrap;
+        font-size: 4vw;
+        font-weight: bold;
+        font-family: serif;
+    }
+    .user-info {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .user-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+        .user-name {
+            color: white;
+            font-size: 16px;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+    }
+}
+
+@keyframes text-up {
+    0% {
+        top: 100vh;
+        transform: translateY(100%);
+    }
+    100% {
+        top: 0;
+        transform: translateY(-100%);
+    }
+}
