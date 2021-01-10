@@ -1,0 +1,26 @@
+{
+  "name": "neurona-twcas",
+  "version": "1.0.0",
+  "description": "ニューロナのライブでツイキャスと連動して使う",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "socket.io": "^3.0.5",
+    "ws": "^7.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hidetaro7/neurona-screen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hidetaro7/neurona-screen/issues"
+  },
+  "homepage": "https://github.com/Hidetaro7/neurona-screen#readme"
+}
