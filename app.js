@@ -61,7 +61,7 @@ const checkNewComment = () => {
             io.emit('newComment', resultComments);
             all_count = json.all_count
         }
-        setTimeout(checkNewComment,1000)
+        setTimeout(checkNewComment,10000)
     })
 }
 
