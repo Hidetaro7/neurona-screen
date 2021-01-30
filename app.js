@@ -31,7 +31,7 @@ let all_count = 0
 
 const fetchTwcas = () => {
     return new Promise((resolve, reject) => {
-        fetch('https://apiv2.twitcasting.tv/movies/664474063/comments?limit=10', {
+        fetch('https://apiv2.twitcasting.tv/movies/664474063/comments?limit=5', {
             headers: {
                 'Content-Type': 'application/json',
                 "X-Api-Version": "2.0",
